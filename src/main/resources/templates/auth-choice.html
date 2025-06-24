@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <link rel="icon" type="image/png" sizes="96x96"
+        href="https://img.icons8.com/external-prettycons-lineal-prettycons/100/6D8B9D/external-diploma-business-and-finance-prettycons-lineal-prettycons.png">
+    <style>
+        :root {
+            --primary-color: #B7CBD4;
+            --primary-dark: #8FA9B5;
+            --primary-light: #DFE8EC;
+            --accent-color: #6D8B9D;
+            --text-color: #3A4A52;
+            --white: #FFFFFF;
+            --error-color: #E57373;
+            --success-color: #81C784;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .welcome-container {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .auth-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .auth-option {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-option:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .auth-option h2 {
+            margin: 0 0 10px 0;
+            font-weight: 500;
+        }
+
+        .auth-option p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .message {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .error {
+            background-color: rgba(229, 115, 115, 0.1);
+            color: var(--error-color);
+        }
+
+        .success {
+            background-color: rgba(129, 199, 132, 0.1);
+            color: var(--success-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="welcome-container">
+        <h1>Добро пожаловать!</h1>
+        <div th:if="${error}" class="message error" th:text="${error}"></div>
+        <div th:if="${message}" class="message success" th:text="${message}"></div>
+        <div class="auth-options">
+            <div class="auth-option" onclick="location.href='/login'">
+                <h2>Вход</h2>
+                <p>Уже есть аккаунт? Войдите в систему</p>
+            </div>
+
+            <div class="auth-option" onclick="location.href='/registration'">
+                <h2>Регистрация</h2>
+                <p>Новый пользователь? Создайте аккаунт</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

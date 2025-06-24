@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" sizes="96x96"
+        href="https://img.icons8.com/external-prettycons-lineal-prettycons/100/6D8B9D/external-diploma-business-and-finance-prettycons-lineal-prettycons.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Main</title>
+</head>
+
+<body>
+    <div class="main">
+        <div class="light-background">
+            <div class="profile-header">
+                <div class="profile-actions">
+                    <a href="/profile" class="btn-primary">
+                        <span th:text="${user.username}"></span>
+                        <i style="margin-left:5px;" class="fa-regular fa-user"></i>
+                    </a>
+                </div>
+            </div>
+            <div style="padding: 0px 60px 60px 60px;">
+                <h3 for="url">Вставьте URL:</h3>
+                <div class="element url">
+                    <input class="input-form-url" type="text" id="url" name="url"
+                        placeholder="https://contest.sgu.ru/..." />
+                    <div style=" display: flex; align-items: center;">
+                        <input class="form-file" type="file" id="htmlFile" name="htmlFile" accept=".html">
+                        <div class="icon-container"
+                            title="Не удается загрузить страницу через url? Загрузите страницу как .html файл.">
+                            <i class="fa-solid fa-question">
+                            </i>
+                        </div>
+                    </div>
+                </div>
+                <h3>Добавьте данные об участниках</h3>
+                <div class="element">
+                    <input type="radio" id="uploadNewDataFile" name="fileOption2" value="uploadNewDataFile" />
+                    <label for="uploadNewDataFile">Загрузить новый файл</label>
+                    <div id="newDataFileUploadSection">
+                        <label for="dataAboutParticipantsFile">Данные об участниках (.xlsx):</label>
+                        <input class="form-file" type="file" id="dataAboutParticipantsFile"
+                            name="dataAboutParticipantsFile" accept=".xls,.xlsx">
+                    </div>
+                </div>
+
+                <div class="element">
+                    <input type="radio" id="useExistingDataFile" name="fileOption2" value="useExistingDataFile" />
+                    <label for="useExistingDataFile">Выбрать существующий файл</label>
+                    <select id="existingDataFiles" name="existingDataFiles">
+                        <option id="existingData" name="existingData" th:each="file : ${userDataFiles}"
+                            th:value="${file.id}" th:text="${file.filename}">
+                        </option>
+                    </select>
+                </div>
+                <button onclick="uploadExcel()">Сканировать таблицу</button>
+
+                <div id="headersContainer">
+                </div>
+                <label>Вставьте номера столбцов:</label>
+                <div class="element2">
+                    <input type="number" class="input-field" min="1" placeholder="Название" />
+                    <input type="number" class="input-field" min="1" placeholder="ВУЗ" />
+                    <input type="number" class="input-field" min="1" placeholder="1 Участник Имя" />
+                    <input type="number" class="input-field" min="1" placeholder="1 Участник Фамилия" />
+                    <input type="number" class="input-field" min="1" placeholder="2 Участник Имя" />
+                    <input type="number" class="input-field" min="1" placeholder="2 Участник Фамилия" />
+                    <input type="number" class="input-field" min="1" placeholder="3 Участник Имя" />
+                    <input type="number" class="input-field" min="1" placeholder="3 Участник Фамилия" />
+                    <input type="number" class="input-field" min="1" placeholder="Тренер Имя" />
+                    <input type="number" class="input-field" min="1" placeholder="Тренер Фамилия" />
+                </div>
+                <h3>Добавьте шаблон диплома
+                    <div class="icon-container" title="<name_of_team> - Название команды,
+                    <name_of_university> - Университет,
+                    <contant1> - Участник 1,
+                    <contant2> - Участник 2,
+                    <contant3> - Участник 3,
+                    <coach> - Тренер">
+                        <i class="fa-solid fa-question">
+                        </i>
+                    </div>
+                </h3>
+                <div class="element">
+                    <input type="radio" id="uploadNewFile" name="fileOption" value="uploadNewFile" />
+                    <label for="uploadNewFile">Загрузить новый файл</label>
+                    <div id="newFileUploadSection">
+                        <label for="diplomaTemplateFile">Шаблон диплома (.docx):</label>
+                        <input class="form-file" type="file" id="diplomaTemplateFile" name="diplomaTemplateFile"
+                            accept=".docx, .doc" />
+                    </div>
+                </div>
+
+                <div class="element">
+                    <input type="radio" id="useExistingFile" name="fileOption" value="useExistingFile" />
+                    <label for="useExistingFile">Выбрать существующий файл</label>
+                    <select id="existingFiles" name="existingFiles">
+                        <option th:each="file : ${userTemplates}" th:value="${file.id}" th:text="${file.filename}">
+                        </option>
+                    </select>
+                </div>
+                <h3>Выберите тип диплома</h3>
+
+                <div class="checkbox-container">
+                    <label>
+                        <input type="checkbox" id="checkboxA" name="diplomaTypeAllTeams" value="allTeams"
+                            onchange="toggleDiplomaSection('all')">
+                        Дипломы для всех команд
+                    </label>
+                    <section class="diplomas section-all-diplomas hidden1" id="section-all-diplomas">
+                        <div class="diploma">
+                            <label>Диплом I степени:</label>
+                            <input class="diploma-input" id="num1_1" name="num1_1" type="number" min="1" />
+                            <input class="diploma-input" id="num1_2" name="num1_2" type="number" min="1" />
+                        </div>
+                        <div class="diploma">
+                            <label>Диплом II степени:</label>
+                            <input class="diploma-input" id="num2_1" name="num2_1" type="number" min="1" />
+                            <input class="diploma-input" id="num2_2" name="num2_2" type="number" min="1" />
+                        </div>
+                        <div class="diploma">
+                            <label>Диплом III степени:</label>
+                            <input class="diploma-input" id="num3_1" name="num3_1" type="number" min="1" />
+                            <input class="diploma-input" id="num3_2" name="num3_2" type="number" min="1" />
+                        </div>
+                    </section>
+                </div>
+
+                <div class="checkbox-container">
+                    <label>
+                        <input type="checkbox" id="checkboxB" name="diplomaTypeSelectedTeam" value="selectedTeam"
+                            onchange="toggleDiplomaSection('one')">
+                        Диплом для выбранной команды
+                    </label>
+                    <div id="section-one-diploma" class="section-one-diploma hidden1">
+                        <div class="one-diploma">
+                            <label>Введите название команды:</label>
+                            <input class="input-form-name-team" type="text" name="nameTeam" placeholder="Team" />
+                            <br>
+                            <label>Введите степень:</label>
+                            <input class="diploma-input degree" name="degreeNumber" type="number" min="1" max="3"
+                                placeholder="1" />
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-add" type="button" id="addButton" onclick="addSection(event)">Добавить</button>
+
+                <br>
+                <label for="fileFormat">Выберите формат файлов:</label>
+                <select id="fileFormat" name="fileFormat" class="file-format">
+                    <option value="docx">DOCX</option>
+                    <option value="pdf">PDF</option>
+                </select>
+                <br>
+                <button class="btn-download" onclick="submitData()">Обработать данные</button>
+                <!--                <div th:if="${successMessage}" style="color:green;">-->
+                <!--                    <p th:text="${successMessage}"></p>-->
+                <!--                </div>-->
+                <!--                <div th:if="${errorMessage}" style="color:blue;">-->
+                <!--                    <p th:text="${errorMessage}"></p>-->
+                <!--                </div>-->
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/toggleDiplomaSection.js"></script>
+    <script src="/js/toggleFileOption.js"></script>
+    <script src="/js/toggleDataFileOption.js"></script>
+    <script src="/js/excel.js"></script>
+    <script src="/js/addSection.js"></script>
+    <script src="/js/submitData.js"></script>
+    <script src="https://kit.fontawesome.com/95c824e959.js" crossorigin="anonymous"></script>
+</body>
+<footer style="height: 120px;">
+</footer>
+
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="icon" type="image/png" sizes="96x96"
+        href="https://img.icons8.com/external-prettycons-lineal-prettycons/100/6D8B9D/external-diploma-business-and-finance-prettycons-lineal-prettycons.png">
+
+    <style>
+        :root {
+            --primary-color: #B7CBD4;
+            --primary-dark: #8FA9B5;
+            --primary-light: #DFE8EC;
+            --accent-color: #6D8B9D;
+            --text-color: #3A4A52;
+            --white: #FFFFFF;
+            --error-color: #E57373;
+            --success-color: #81C784;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-light);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+        }
+
+        .main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .profile-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 0px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+
+        .profile-header h1 h2 {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .profile-card {
+            padding: 30px;
+        }
+
+        .profile-info {
+            margin-bottom: 30px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--primary-light);
+        }
+
+        .info-label {
+            font-weight: 500;
+            width: 200px;
+            color: var(--accent-color);
+        }
+
+        .info-value {
+            flex: 1;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary,
+        .btn-secondary,
+        .btn-logout {
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            border: none;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-logout,
+        .btn-delete {
+            background-color: var(--error-color);
+            color: var(--white);
+        }
+
+        .btn-logout:hover,
+        .btn-delete:hover {
+            background-color: #D32F2F;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background-color: rgba(129, 199, 132, 0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .file-name {
+            flex-grow: 1;
+        }
+
+        .btn {
+            padding: 5px;
+            text-decoration: none;
+            border-radius: 5px;
+            color: white;
+            border: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-view,
+        .btn-download,
+        .btn-delete {
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+
+        .btn-view {
+            background-color: #6792c7;
+        }
+
+        .btn-view:hover {
+            background-color: #2e65a8;
+        }
+
+        .btn-download {
+            background-color: var(--success-color);
+        }
+
+        .btn-download:hover {
+            background-color: green;
+        }
+
+
+        .profile-files {
+            /* margin: 20px; */
+        }
+
+        .profile-files ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .profile-files li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid var(--primary-dark);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-files {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        h3 {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="profile-container">
+            <div class="profile-header">
+                <h1>Профиль</h1>
+                <div class="profile-actions">
+                    <a href="/" class="btn-primary">На главную</a>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <div th:if="${message}" class="message success-message" th:text="${message}"></div>
+
+                <div class="profile-info">
+                    <div class="info-row">
+                        <span class="info-label">Имя пользователя:</span>
+                        <span class="info-value" th:text="${user.username}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Электронная почта:</span>
+                        <span class="info-value" th:text="${user.email}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Полное имя:</span>
+                        <span class="info-value" th:text="${user.fullName}"></span>
+                    </div>
+                </div>
+                <div class="profile-files">
+                    <h3>Мои таблицы:</h3>
+                    <p th:if="${#lists.isEmpty(userDataFiles)}">Список пуст</p>
+                    <ul>
+                        <li th:each="file : ${userDataFiles}">
+                            <span class="file-name" th:text="${file.filename}"></span>
+                            <div class="btn-files">
+                                <a th:href="@{/profile/download(fileId=${file.id})}" class="btn btn-download"
+                                    title="Скачать файл" download>
+                                    <i class="fa-solid fa-download"></i>
+                                </a>
+                                <form th:action="@{/profile/delete}" method="post" style="display:inline;">
+                                    <input type="hidden" name="fileId" th:value="${file.id}" />
+                                    <button type="submit" class="btn btn-delete" title="Удалить файл"
+                                        onclick="return confirm('Вы уверены что хотите удалить этот файл?');">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="profile-files">
+                    <h3>Мои шаблоны:</h3>
+                    <p th:if="${#lists.isEmpty(userTemplates)}">Список пуст</p>
+                    <ul>
+                        <li th:each="file : ${userTemplates}">
+                            <span class="file-name" th:text="${file.filename}"></span>
+                            <div class="btn-files">
+                                <a th:href="@{/profile/view(fileId=${file.id})}" class="btn btn-view"
+                                    title="Просмотреть файл" target="_blank">
+                                    <i class="fa-regular fa-eye"></i>
+                                </a>
+                                <a th:href="@{/profile/download(fileId=${file.id})}" class="btn btn-download"
+                                    title="Скачать файл" download>
+                                    <i class="fa-solid fa-download"></i>
+                                </a>
+                                <form th:action="@{/profile/delete}" method="post" style="display:inline;">
+                                    <input type="hidden" name="fileId" th:value="${file.id}" />
+                                    <button type="submit" class="btn btn-delete" title="Удалить файл"
+                                        onclick="return confirm('Вы уверены что хотите удалить этот файл?');">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="profile-files">
+                    <h3>Мои дипломы:</h3>
+                    <p th:if="${#lists.isEmpty(userFiles)}">Список пуст</p>
+                    <ul>
+                        <li th:each="file : ${userFiles}">
+                            <span class="file-name" th:text="${file.filename}"></span>
+                            <div class="btn-files">
+                                <a th:href="@{/profile/view(fileId=${file.id})}" class="btn btn-view"
+                                    title="Просмотреть файл" target="_blank">
+                                    <i class="fa-regular fa-eye"></i>
+                                </a>
+                                <a th:href="@{/profile/download(fileId=${file.id})}" class="btn btn-download"
+                                    title="Скачать файл" download>
+                                    <i class="fa-solid fa-download"></i>
+                                </a>
+                                <form th:action="@{/profile/delete}" method="post" style="display:inline;">
+                                    <input type="hidden" name="fileId" th:value="${file.id}" />
+                                    <button type="submit" class="btn btn-delete" title="Удалить файл"
+                                        onclick="return confirm('Вы уверены что хотите удалить этот файл?');">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                    <form th:if="${!#lists.isEmpty(userFiles)}" th:action="@{/profile/downloadAllFiles}" method="get"
+                        style="margin-bottom:10px;">
+                        <button type="submit" class="btn btn-download"> Скачать все файлы
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="profile-actions">
+                    <a href="/profile/edit" class="btn-secondary">Редактировать профиль</a>
+                    <form th:action="@{/logout}" method="post" class="logout-form">
+                        <button type="submit" class="btn-logout">Выйти из аккаунта</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://kit.fontawesome.com/95c824e959.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

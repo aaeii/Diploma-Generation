@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link rel="icon" type="image/png" sizes="96x96"
+        href="https://img.icons8.com/external-prettycons-lineal-prettycons/100/6D8B9D/external-diploma-business-and-finance-prettycons-lineal-prettycons.png">
+    <style>
+        :root {
+            --primary-color: #B7CBD4;
+            --primary-dark: #8FA9B5;
+            --primary-light: #DFE8EC;
+            --accent-color: #6D8B9D;
+            --text-color: #3A4A52;
+            --white: #FFFFFF;
+            --error-color: #E57373;
+            --success-color: #81C784;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .auth-container {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 0px 30px 30px 30px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            /* margin-bottom: 30px; */
+            font-weight: 600;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(109, 139, 157, 0.2);
+        }
+
+        input[type="submit"] {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: var(--accent-color);
+        }
+
+        .auth-link {
+            margin-top: 20px;
+            color: var(--accent-color);
+            text-decoration: none;
+            display: inline-block;
+            transition: color 0.3s;
+        }
+
+        .auth-link:hover {
+            color: var(--text-color);
+            text-decoration: underline;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .error {
+            background-color: rgba(229, 115, 115, 0.1);
+            color: var(--error-color);
+        }
+
+        .success {
+            background-color: rgba(129, 199, 132, 0.1);
+            color: var(--success-color);
+        }
+
+        .form-group {
+            display: flex;
+        }
+
+        .icon {
+            background: var(--primary-dark);
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            padding: 10px 0px;
+            font-size: 20px;
+            width: 50px
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <h1>Регистрация</h1>
+        <form th:action="@{/registration}" method="post">
+            <div>
+                <label class="form-group" for="username">Логин:</label>
+                <div class="form-group">
+                    <i class="fa-solid fa-user icon"></i>
+                    <input type="text" id="username" name="username" required>
+                </div>
+            </div>
+
+            <div>
+                <label class="form-group" for="password">Пароль:</label>
+                <div class="form-group">
+                    <i class="fa-solid fa-key icon"></i>
+                    <input type="password" id="password" name="password" required>
+                </div>
+            </div>
+            <div>
+                <label class="form-group" for="fullName">Имя:</label>
+                <div class="form-group">
+                    <i class="fa-solid fa-person icon"></i>
+                    <input type="text" id="fullName" name="fullName">
+                </div>
+            </div>
+            <div>
+                <label class="form-group" for="email">Почта:</label>
+                <div class="form-group">
+                    <i class="fa-solid fa-envelope icon"></i>
+                    <input type="email" id="email" name="email" required>
+                </div>
+            </div>
+
+            <input type="submit" value="Регистрация">
+        </form>
+        <div>
+            Уже есть аккаунт? <a href="/login" class="auth-link">Вход</a>
+        </div>
+        <div th:if="${message}" class="message" th:classappend="${error} ? 'error' : 'success'" th:text="${message}">
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/95c824e959.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
