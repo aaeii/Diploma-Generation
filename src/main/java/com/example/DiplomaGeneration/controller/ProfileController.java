@@ -49,7 +49,6 @@ public class ProfileController {
 
     @GetMapping("/profile")
     public String profile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        // Загружаем данные пользователя из базы
         User user = (User) userService.loadUserByUsername(userDetails.getUsername());
         model.addAttribute("user", user);
         List<FileEntity> userFiles = user.getFiles().stream()
@@ -125,7 +124,6 @@ public class ProfileController {
                 // Получаем FileEntity по его ID
                 FileEntity fileEntity = fileRepository.findById(fileId)
                         .orElseThrow(() -> new IllegalArgumentException("File not found with id: " + fileId));
-
                 // Добавляем файл в ZIP-архив
                 ZipEntry zipEntry = new ZipEntry(fileEntity.getFilename());
                 zipOutputStream.putNextEntry(zipEntry);
@@ -133,16 +131,10 @@ public class ProfileController {
                 zipOutputStream.closeEntry();
             }
         }
-
-        // Создание ByteArrayResource из архива
         ByteArrayResource resource = new ByteArrayResource(byteArrayOutputStream.toByteArray());
-
-        // Настройка заголовков для ответа
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"diplomas.zip\"");
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
-
-        // Возврат ответа с ZIP-архивом
         return ResponseEntity.ok()
                 .headers(headers)
                 .contentLength(byteArrayOutputStream.size())
@@ -152,9 +144,7 @@ public class ProfileController {
     public static byte[] convertDocxToPdf(byte[] docxBytes) {
         Document doc = new Document();
         doc.loadFromStream(new ByteArrayInputStream(docxBytes), FileFormat.Docx);
-        // Используем ByteArrayOutputStream для сохранения PDF в байтовый массив
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-            // Сохраняем PDF в поток
             doc.saveToStream(byteArrayOutputStream, FileFormat.PDF);
             return byteArrayOutputStream.toByteArray();
         } catch (IOException e) {
